@@ -1,3 +1,3 @@
-# Innovative Idea
-Identify a real-world problem and 
-develop a software solution to address it.
+# Smart-Waste-Management
+
+A system where users can request garbage collection, track waste trucks, and report illegal dumping.
