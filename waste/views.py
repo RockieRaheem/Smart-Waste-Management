@@ -13,6 +13,11 @@ class IllegalDumpingReportListCreateView(generics.ListCreateAPIView):
     serializer_class = IllegalDumpingReportSerializer
     permission_classes = [permissions.IsAuthenticated]  # Protect this endpoint
 
+    def get_queryset(self):
+        if self.request.user.role == 'officer':  # Only municipal officers can see reports
+            return IllegalDumpingReport.objects.all()
+        return IllegalDumpingReport.objects.filter(user=self.request.user)
+
 
 
    
