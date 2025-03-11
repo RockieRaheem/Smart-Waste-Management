@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     
     # Third-party apps
     'rest_framework',
+    'django_bootstrap5',  # Add Bootstrap support
+
     
     # Project apps
     'users',
