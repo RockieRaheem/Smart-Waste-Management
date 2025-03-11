@@ -1,3 +1,13 @@
+import os
+STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Enable Whitenoise for ststic file serving
+INSTALLED_APPS += ['whitenoise.runserver_nonstatic']
+MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 """
 Django settings for core project.
 
