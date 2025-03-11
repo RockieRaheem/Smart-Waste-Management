@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     
     # Third-party apps
     'rest_framework',
+    'django_bootstrap5',  # Add Bootstrap support
+
     
     # Project apps
     'users',
@@ -81,7 +83,7 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

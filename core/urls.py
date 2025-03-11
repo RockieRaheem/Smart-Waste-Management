@@ -17,12 +17,23 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from .views import home_view 
+from .views import home_view, login_view, dashboard_view
+from .views import signup_view, login_view
 
 urlpatterns = [
-    path('', home_view, name='home'),
     path('admin/', admin.site.urls),
+    path('', home_view, name='home'),
+    path('login/', login_view, name='login'),
     path('api/', include('users.urls')),
     path('api/', include('waste.urls')),
     path('api/', include('tracking.urls')),
+    path('api/', include('routes.urls')),
+    path('dashboard/', dashboard_view, name='dashboard'),
+    path('signup/', signup_view, name='signup'),
+    path('login/', login_view, name='login'),
 ]
+
+
+
+
+
