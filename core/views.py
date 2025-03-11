@@ -8,9 +8,6 @@ from django.contrib.auth import login
 def home_view(request):
     return render(request, 'home.html')
 
-def login_view(request):
-    return render(request, 'login.html')
-
 @login_required
 def dashboard_view(request):
     return render(request, 'dashboard.html', {'user': request.user})
