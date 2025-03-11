@@ -18,7 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from .views import home_view, login_view, dashboard_view
-from .views import signup_view
+from .views import signup_view, login_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,6 +30,7 @@ urlpatterns = [
     path('api/', include('routes.urls')),
     path('dashboard/', dashboard_view, name='dashboard'),
     path('signup/', signup_view, name='signup'),
+    path('login/', login_view, name='login'),
 ]
 
 
