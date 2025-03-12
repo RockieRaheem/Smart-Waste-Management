@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'users',
     'waste',
     'tracking',
+    'routes',
 ]
 
 REST_FRAMEWORK = {
