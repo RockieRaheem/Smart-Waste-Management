@@ -20,6 +20,7 @@ from django.urls import path, include
 from .views import home_view, login_view, dashboard_view
 from .views import signup_view, login_view
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home_view, name='home'),
@@ -30,6 +31,10 @@ urlpatterns = [
     path('api/', include('routes.urls')),
     path('signup/', signup_view, name='signup'),
     path('login/', login_view, name='login'),
+    path('resident/', resident_dashboard, name='resident_dashboard'),
+    path('company/', company_dashboard, name='company_dashboard'),
+    path('officer/', officer_dashboard, name='officer_dashboard'),
+    path('driver/', driver_dashboard, name='driver_dashboard'),
 ]
 
 
