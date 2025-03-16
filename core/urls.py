@@ -28,7 +28,6 @@ urlpatterns = [
     path('api/', include('waste.urls')),
     path('api/', include('tracking.urls')),
     path('api/', include('routes.urls')),
-    path('dashboard/', dashboard_view, name='dashboard'),
     path('signup/', signup_view, name='signup'),
     path('login/', login_view, name='login'),
 ]
