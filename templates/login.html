@@ -1,23 +1,32 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Login - Smart Waste{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-4">
-        <h2 class="text-center">Login</h2>
-        <form method="POST">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label class="form-label">Username</label>
-                <input type="text" name="username" class="form-control">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header text-center">
+                <h1>Login</h1>
             </div>
-            <div class="mb-3">
-                <label class="form-label">Password</label>
-                <input type="password" name="password" class="form-control">
+            <div class="card-body">
+                <p class="text-muted text-center">Welcome back to Smart Waste Management!</p>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" name="username" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                </form>
+                <p class="mt-3 text-center">Don’t have an account? <a href="{% url 'signup' %}" class="text-primary">Sign up here</a></p>
             </div>
-            <button type="submit" class="btn btn-primary w-100">Login</button>
-        </form>
+        </div>
     </div>
 </div>
 {% endblock %}
