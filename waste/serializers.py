@@ -10,3 +10,4 @@ class IllegalDumpingReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = IllegalDumpingReport
         fields = '__all__'
+

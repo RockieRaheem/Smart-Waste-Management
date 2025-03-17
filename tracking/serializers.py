@@ -5,3 +5,4 @@ class GarbageTruckSerializer(serializers.ModelSerializer):
     class Meta:
         model = GarbageTruck
         fields = '__all__'
+ 
