@@ -2,7 +2,7 @@
 URL configuration for core project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.1/topics/http/urls/
+    https://docs.djangoproject.com/en/4.2/topics/http/urls/
 Examples:
 Function views
     1. Add an import:  from my_app import views
@@ -17,27 +17,26 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from .views import home_view, login_view, dashboard_view
-from .views import signup_view, login_view
-
+from .views import home_view, login_view, signup_view, logout_view
+from .views import resident_dashboard, company_dashboard, officer_dashboard, driver_dashboard
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home_view, name='home'),
+    path('signup/', signup_view, name='signup'),
     path('login/', login_view, name='login'),
+    path('logout/', logout_view, name='logout'),  # Added logout route
     path('api/', include('users.urls')),
     path('api/', include('waste.urls')),
     path('api/', include('tracking.urls')),
     path('api/', include('routes.urls')),
-    path('signup/', signup_view, name='signup'),
-    path('login/', login_view, name='login'),
-    path('resident/', resident_dashboard, name='resident_dashboard'),
+    path('resident/', resident_dashboard, name='resident_dashboard'),  # Simplified and consistent paths
     path('company/', company_dashboard, name='company_dashboard'),
     path('officer/', officer_dashboard, name='officer_dashboard'),
     path('driver/', driver_dashboard, name='driver_dashboard'),
 ]
 
-
-
-
-
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
