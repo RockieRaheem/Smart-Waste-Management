@@ -1,3 +1,38 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Resident Dashboard{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header text-center">
+                <h1>Resident Dashboard</h1>
+            </div>
+            <div class="card-body">
+                <p class="text-muted text-center">Submit a waste collection request or report illegal dumping.</p>
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Request Type</label>
+                        <select name="request_type" class="form-control" required>
+                            <option value="collection">Waste Collection Request</option>
+                            <option value="illegal_dumping">Report Illegal Dumping</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Upload Image</label>
+                        <input type="file" name="image" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Location</label>
+                        <input type="text" name="location" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Submit Request</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
