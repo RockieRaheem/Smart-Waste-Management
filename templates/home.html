@@ -1,12 +1,15 @@
 {% extends 'base.html' %}
 
-{% block title %}Home - Smart Waste{% endblock %}
+{% block title %}Smart Waste Management{% endblock %}
 
 {% block content %}
-<div class="text-center">
-    <h1 class="display-4">Welcome to Smart Waste Management</h1>
-    <p class="lead">Track and manage waste collection efficiently.</p>
-    <a href="/signup/" class="btn btn-success btn-lg">Get Started</a>
+<div class="container text-center mt-5">
+    <h1>Welcome to Smart Waste Management</h1>
+    <p>Join us in managing waste efficiently.</p>
 
+    <div class="mt-4">
+        <a href="{% url 'login' %}" class="btn btn-primary btn-lg mx-2">Login</a>
+        <a href="{% url 'signup' %}" class="btn btn-success btn-lg mx-2">Sign Up</a>
+    </div>
 </div>
 {% endblock %}
