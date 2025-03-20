@@ -21,7 +21,8 @@ DEBUG = os.getenv('DEBUG', 'True') == 'True'
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-] + os.getenv('ALLOWED_HOSTS', 'smart-waste-management-vup3.onrender.com').split(',')
+    'smart-waste-management-vup3.onrender.com',
+]
 
 # Application definition
 INSTALLED_APPS = [
@@ -73,6 +74,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.csrf',  # Ensures CSRF token in templates
             ],
         },
     },
@@ -125,15 +127,23 @@ LOGIN_URL = '/login/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # CSRF settings
-CSRF_COOKIE_SECURE = True if not DEBUG else False
+CSRF_COOKIE_SECURE = False if DEBUG else True  # Secure in production, not locally
 CSRF_COOKIE_HTTPONLY = False
 CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:8000',
+    'http://localhost:8000',
     'https://smart-waste-management-vup3.onrender.com',
 ]
+CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_NAME = 'csrftoken'
-CSRF_HEADER_NAME = 'HTTP_X_CSRFTOKEN'
+CSRF_USE_SESSIONS = False
+
+# Session settings
+SESSION_COOKIE_SECURE = False if DEBUG else True  # Secure in production, not locally
 SESSION_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_AGE = 1209600  # 2 weeks
+SESSION_COOKIE_NAME = 'sessionid'
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 # Security settings for production
 SECURE_SSL_REDIRECT = True if not DEBUG else False

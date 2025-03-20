@@ -1,33 +1,16 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.hashers import make_password
 from django.contrib import messages
+from django.middleware.csrf import rotate_token
+from django.views.decorators.csrf import ensure_csrf_cookie
 from users.models import CustomUser
 from .models import WasteRequest
-from django.middleware.csrf import rotate_token
 
-
-def login_view(request):
-    messages.get_messages(request).used = True
-    if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            rotate_token(request)  # Regenerate CSRF token after login
-            messages.success(request, "Login successful!")
-            return redirect_user_to_dashboard(user)
-        messages.error(request, "Invalid username or password.")
-        return redirect("login")
-    return render(request, "login.html")
-
-# Function to Redirect Users to Their Dashboard Based on Role (Only on Initial Login)
 def redirect_user_to_dashboard(user):
+    """Redirects authenticated users to their respective dashboards based on role."""
     if not user.is_authenticated:
         return redirect("login")
-    print(f"Redirecting user: {user.username}, Role: {user.role}")  # Debug log
     if user.role == "resident":
         return redirect("resident_dashboard")
     elif user.role == "company":
@@ -36,14 +19,16 @@ def redirect_user_to_dashboard(user):
         return redirect("officer_dashboard")
     elif user.role == "driver":
         return redirect("driver_dashboard")
-    return redirect("home")  # Fallback
+    return redirect("home")
 
-# Home Page View
+@ensure_csrf_cookie
 def home_view(request):
-    return render(request, 'home.html')
+    """Renders the home page."""
+    return render(request, 'home.html', {'request': request})
 
-# Signup View
+@ensure_csrf_cookie
 def signup_view(request):
+    """Handles user signup with form validation."""
     messages.get_messages(request).used = True
     if request.method == "POST":
         username = request.POST["username"]
@@ -52,7 +37,6 @@ def signup_view(request):
         password1 = request.POST["password1"]
         password2 = request.POST["password2"]
         role = request.POST["role"]
-
         if CustomUser.objects.filter(username=username).exists():
             messages.error(request, "Username already exists.")
             return redirect("signup")
@@ -65,7 +49,6 @@ def signup_view(request):
         if password1 != password2:
             messages.error(request, "Passwords do not match.")
             return redirect("signup")
-        
         user = CustomUser.objects.create_user(
             username=username,
             email=email,
@@ -75,10 +58,11 @@ def signup_view(request):
         )
         messages.success(request, "Account created successfully! You can now log in.")
         return redirect("login")
-    return render(request, "signup.html")
+    return render(request, "signup.html", {'request': request})
 
-# Login View
+@ensure_csrf_cookie
 def login_view(request):
+    """Handles user login with CSRF token rotation and session persistence."""
     messages.get_messages(request).used = True
     if request.method == "POST":
         username = request.POST.get("username")
@@ -86,24 +70,27 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+            rotate_token(request)  # Rotate CSRF token after login
+            request.session.save()  # Ensure session is saved
             messages.success(request, "Login successful!")
             return redirect_user_to_dashboard(user)
         messages.error(request, "Invalid username or password.")
         return redirect("login")
-    return render(request, "login.html")
+    return render(request, "login.html", {'request': request})
 
-# Logout View
 def logout_view(request):
+    """Handles user logout."""
     logout(request)
     messages.success(request, "Logged out successfully!")
     return redirect("login")
 
 @login_required
+@ensure_csrf_cookie
 def resident_dashboard(request):
-    # Only redirect if user is not a resident AND this is not a POST request or refresh
-    if request.user.role != "resident" and request.method == "GET":
+    """Resident dashboard for submitting waste requests."""
+    if request.user.role != "resident":
         messages.error(request, "Only residents can access this dashboard.")
-        return redirect_user_to_dashboard(request.user)
+        return redirect("login")
     if request.method == "POST":
         try:
             waste_request = WasteRequest(
@@ -118,14 +105,15 @@ def resident_dashboard(request):
         except Exception as e:
             messages.error(request, f"Error submitting request: {str(e)}")
         return redirect("resident_dashboard")
-    return render(request, "resident_dashboard.html")
+    return render(request, "resident_dashboard.html", {'request': request})
 
 @login_required
+@ensure_csrf_cookie
 def company_dashboard(request):
-    messages.get_messages(request).used = True
-    if request.user.role != "company" and request.method == "GET":
+    """Company dashboard for managing waste requests and assigning drivers."""
+    if request.user.role != "company":
         messages.error(request, "Only company users can access this dashboard.")
-        return redirect_user_to_dashboard(request.user)
+        return redirect("login")
     collection_requests = WasteRequest.objects.filter(request_type="collection").order_by('-timestamp')
     illegal_dumping_reports = WasteRequest.objects.filter(request_type="illegal_dumping").order_by('-timestamp')
     available_drivers = CustomUser.objects.filter(role="driver")
@@ -146,7 +134,7 @@ def company_dashboard(request):
                         waste_request.save()
                         messages.success(request, "Task assigned successfully!")
                     else:
-                        messages.error(request, "Task is already assigned to a driver.")
+                        messages.error(request, "Task is already assigned.")
                 elif action == "mark_completed":
                     waste_request.status = "completed"
                     waste_request.save()
@@ -161,17 +149,19 @@ def company_dashboard(request):
                 messages.error(request, f"Error processing action: {str(e)}")
         return redirect("company_dashboard")
     return render(request, 'company_dashboard.html', {
+        'request': request,
         'collection_requests': collection_requests,
         'illegal_dumping_reports': illegal_dumping_reports,
         'available_drivers': available_drivers
     })
 
 @login_required
+@ensure_csrf_cookie
 def officer_dashboard(request):
-    messages.get_messages(request).used = True
-    if request.user.role != "officer" and request.method == "GET":
+    """Officer dashboard for managing illegal dumping reports."""
+    if request.user.role != "officer":
         messages.error(request, "Only officers can access this dashboard.")
-        return redirect_user_to_dashboard(request.user)
+        return redirect("login")
     illegal_dumping_reports = WasteRequest.objects.filter(request_type="illegal_dumping").order_by('-timestamp')
     if request.method == "POST":
         report_id = request.POST.get("report_id")
@@ -180,20 +170,22 @@ def officer_dashboard(request):
             try:
                 report = WasteRequest.objects.get(id=report_id)
                 report.delete()
-                messages.success(request, "Illegal dumping report deleted successfully!")
+                messages.success(request, "Report deleted successfully!")
             except Exception as e:
                 messages.error(request, f"Error deleting report: {str(e)}")
         return redirect("officer_dashboard")
     return render(request, 'officer_dashboard.html', {
+        'request': request,
         'illegal_dumping_reports': illegal_dumping_reports
     })
 
 @login_required
+@ensure_csrf_cookie
 def driver_dashboard(request):
-    messages.get_messages(request).used = True
-    if request.user.role != "driver" and request.method == "GET":
+    """Driver dashboard for managing assigned tasks."""
+    if request.user.role != "driver":
         messages.error(request, "Only drivers can access this dashboard.")
-        return redirect_user_to_dashboard(request.user)
+        return redirect("login")
     assigned_tasks = WasteRequest.objects.filter(assigned_driver=request.user).order_by('-timestamp')
     if request.method == "POST":
         task_id = request.POST.get("task_id")
@@ -210,7 +202,7 @@ def driver_dashboard(request):
                     task.rejected_by = request.user
                     task.assigned_driver = None
                     task.save()
-                    messages.success(request, "Task rejected. It can now be reassigned.")
+                    messages.success(request, "Task rejected successfully!")
                 elif action == "complete":
                     task.status = "completed"
                     task.save()
@@ -225,5 +217,6 @@ def driver_dashboard(request):
                 messages.error(request, f"Error processing task: {str(e)}")
         return redirect("driver_dashboard")
     return render(request, 'driver_dashboard.html', {
+        'request': request,
         'assigned_tasks': assigned_tasks
     })
