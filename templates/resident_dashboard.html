@@ -7,27 +7,30 @@
 <div class="row justify-content-center">
     <div class="col-md-8">
         <div class="card">
-            <div class="card-header text-center">
+            <div class="card-header text-center bg-primary text-white">
                 <h1>Resident Dashboard</h1>
             </div>
             <div class="card-body">
                 <p class="text-muted text-center">Submit a waste collection request or report illegal dumping.</p>
-                <form method="POST" enctype="multipart/form-data">
+                <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
                     {% csrf_token %}
                     <div class="mb-3">
-                        <label class="form-label">Request Type</label>
-                        <select name="request_type" class="form-control" required>
+                        <label for="request_type" class="form-label">Request Type</label>
+                        <select name="request_type" id="request_type" class="form-select" required>
+                            <option value="" disabled selected>Select an option</option>
                             <option value="collection">Waste Collection Request</option>
                             <option value="illegal_dumping">Report Illegal Dumping</option>
                         </select>
+                        <div class="invalid-feedback">Please select a request type.</div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Upload Image</label>
-                        <input type="file" name="image" class="form-control">
+                        <label for="image" class="form-label">Upload Image</label>
+                        <input type="file" name="image" id="image" class="form-control" accept="image/*">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Location</label>
-                        <input type="text" name="location" class="form-control" required>
+                        <label for="location" class="form-label">Location</label>
+                        <input type="text" name="location" id="location" class="form-control" required>
+                        <div class="invalid-feedback">Please enter a location.</div>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Submit Request</button>
                 </form>
@@ -35,4 +38,22 @@
         </div>
     </div>
 </div>
+<script>
+    // Bootstrap form validation
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            var forms = document.getElementsByClassName('needs-validation');
+            Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
 {% endblock %}

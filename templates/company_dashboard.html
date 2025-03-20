@@ -7,7 +7,7 @@
 <div class="row">
     <div class="col-12">
         <div class="card">
-            <div class="card-header text-center">
+            <div class="card-header text-center bg-primary text-white">
                 <h1>Waste Management Dashboard</h1>
             </div>
             <div class="card-body">
@@ -28,8 +28,8 @@
                                         <input type="hidden" name="request_id" value="{{ request.id }}">
                                         <input type="hidden" name="action" value="assign">
                                         <div class="input-group w-50">
-                                            <select name="driver_id" class="form-control">
-                                                <option value="">Select Driver</option>
+                                            <select name="driver_id" class="form-select" required>
+                                                <option value="" disabled selected>Select Driver</option>
                                                 {% for driver in available_drivers %}
                                                     <option value="{{ driver.id }}">{{ driver.username }}</option>
                                                 {% endfor %}
