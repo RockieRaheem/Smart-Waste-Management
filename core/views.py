@@ -5,6 +5,23 @@ from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 from users.models import CustomUser
 from .models import WasteRequest
+from django.middleware.csrf import rotate_token
+
+
+def login_view(request):
+    messages.get_messages(request).used = True
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            rotate_token(request)  # Regenerate CSRF token after login
+            messages.success(request, "Login successful!")
+            return redirect_user_to_dashboard(user)
+        messages.error(request, "Invalid username or password.")
+        return redirect("login")
+    return render(request, "login.html")
 
 # Function to Redirect Users to Their Dashboard Based on Role (Only on Initial Login)
 def redirect_user_to_dashboard(user):
