@@ -23,7 +23,8 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     'smart-waste-management-vup3.onrender.com',
-]
+    'smart-waste-docker.onrender.com',
+] + os.getenv('ALLOWED_HOSTS', '').split(',')
 
 # Application definition
 INSTALLED_APPS = [
@@ -137,6 +138,7 @@ CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:8000',
     'http://localhost:8000',
     'https://smart-waste-management-vup3.onrender.com',
+    'smart-waste-docker.onrender.com',
 ]
 CSRF_COOKIE_SAMESITE = 'Lax'
 CSRF_COOKIE_NAME = 'csrftoken'
