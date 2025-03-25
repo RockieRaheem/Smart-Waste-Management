@@ -126,3 +126,7 @@ We welcome contributions to the Smart Waste Management System! To contribute, pl
 4. Push your changes to your fork.
 5. Create a pull request to the main repository.
 
+
+## License
+
+Unfortunately, we are not yet licenced.
