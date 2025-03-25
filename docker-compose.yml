@@ -2,17 +2,19 @@ version: "3.8"
 
 services:
   db:
-    image: postgres:13
+    image: postgres:latest
     environment:
-      POSTGRES_DB: your_db_name
-      POSTGRES_USER: your_db_user
-      POSTGRES_PASSWORD: your_db_password
+      POSTGRES_DB: smart_waste_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Raheem%23404
     ports:
       - "5432:5432"
 
   web:
     build: .
-    command: gunicorn core.wsgi:application --bind 0.0.0.0:8000
+    command: >
+      sh -c "python manage.py migrate &&
+             gunicorn core.wsgi:application --bind 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
@@ -20,4 +22,4 @@ services:
     depends_on:
       - db
     environment:
-      DATABASE_URL: postgres://your_db_user:your_db_password@db:5432/your_db_name
+      DATABASE_URL: postgres://postgres:Raheem%23404@db:5432/smart_waste_db
