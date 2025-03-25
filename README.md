@@ -130,3 +130,14 @@ We welcome contributions to the Smart Waste Management System! To contribute, pl
 ## License
 
 Unfortunately, we are not yet licenced.
+
+
+
+<img width="910" alt="Image" src="https://github.com/user-attachments/assets/d55226d5-e634-457d-a669-46aca4920df6" />
+<img width="818" alt="Image" src="https://github.com/user-attachments/assets/7fd99a1a-9f2b-4c98-b3f0-a26fb9fef54e" />
+<img width="904" alt="Image" src="https://github.com/user-attachments/assets/3ac3d23d-e17a-4638-a9a7-a20c91813f43" />
+<img width="885" alt="Image" src="https://github.com/user-attachments/assets/668fa531-668b-4c23-9da2-9ac9cdb6dd19" />
+<img width="889" alt="Image" src="https://github.com/user-attachments/assets/9a725b56-6aec-4e8f-9fe6-09a0db9cbe64" />
+<img width="589" alt="Image" src="https://github.com/user-attachments/assets/a3ffb225-caf0-4e0e-a41e-d1dfbda0a9e9" />
+<img width="885" alt="Image" src="https://github.com/user-attachments/assets/668fa531-668b-4c23-9da2-9ac9cdb6dd19" />
+
